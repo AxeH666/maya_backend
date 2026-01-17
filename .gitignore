@@ -5,6 +5,12 @@
 *.key
 *.pem
 
+# Database
+*.db
+*.sqlite
+*.sqlite3
+maya.db
+
 # Python
 __pycache__/
 *.py[cod]

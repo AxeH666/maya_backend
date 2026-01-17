@@ -45,7 +45,7 @@ class PikaProvider(VideoProvider):
         if USE_MOCK:
             logger.warning("PIKA_API_KEY not set - using mock mode")
     
-    async def create_video(self, prompt: str) -> str:
+    async def create_video(self, prompt: str, user_id: Optional[str] = None) -> str:
         """
         Create a new video generation job.
         
@@ -54,6 +54,7 @@ class PikaProvider(VideoProvider):
         
         Args:
             prompt: The video generation prompt
+            user_id: Optional user identifier if authenticated
             
         Returns:
             job_id: Unique identifier for the job
@@ -63,7 +64,7 @@ class PikaProvider(VideoProvider):
         """
         # Generate job ID and create job in tracking system
         job_id = str(uuid.uuid4())
-        create_job(job_id, provider=self.provider_name)
+        create_job(job_id, provider=self.provider_name, user_id=user_id)
         
         if USE_MOCK:
             # Mock mode: simulate async processing

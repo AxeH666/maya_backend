@@ -13,13 +13,14 @@ from video.base import VideoJob
 _JOBS: Dict[str, VideoJob] = {}
 
 
-def create_job(job_id: str, provider: str) -> VideoJob:
+def create_job(job_id: str, provider: str, user_id: Optional[str] = None) -> VideoJob:
     """
     Create a new job with pending status.
     
     Args:
         job_id: Unique job identifier
         provider: Provider name (e.g., "pika", "runway")
+        user_id: Optional user identifier if authenticated
         
     Returns:
         VideoJob: The newly created job
@@ -29,7 +30,8 @@ def create_job(job_id: str, provider: str) -> VideoJob:
         status="pending",
         video_url=None,
         provider=provider,
-        created_at=datetime.now()
+        created_at=datetime.now(),
+        user_id=user_id
     )
     _JOBS[job_id] = job
     return job

@@ -5,6 +5,7 @@ Simulates async video generation with immediate completion.
 Used for development and testing when real API keys aren't available.
 """
 import uuid
+from typing import Optional
 from datetime import datetime
 from video.base import VideoProvider, VideoJob
 from video.polling import create_job, get_job, mark_job_processing, mark_job_ready
@@ -21,18 +22,19 @@ class MockProvider(VideoProvider):
     def __init__(self):
         self.provider_name = "mock"
     
-    async def create_video(self, prompt: str) -> str:
+    async def create_video(self, prompt: str, user_id: Optional[str] = None) -> str:
         """
         Create a mock video job.
         
         Args:
             prompt: The video generation prompt (ignored in mock mode)
+            user_id: Optional user identifier if authenticated
             
         Returns:
             job_id: Unique identifier for the job
         """
         job_id = str(uuid.uuid4())
-        create_job(job_id, provider=self.provider_name)
+        create_job(job_id, provider=self.provider_name, user_id=user_id)
         mark_job_processing(job_id)
         return job_id
     
