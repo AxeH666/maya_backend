@@ -9,22 +9,21 @@ load_dotenv(env_path)
 
 from prompts.system import MAYA_SYSTEM_PROMPT
 
-api_key = os.getenv("GROK_API_KEY")
-if api_key:
-    client = OpenAI(
-        api_key=api_key,
-        base_url="https://api.x.ai/v1"
+# Verify GROK_API_KEY is available after .env loading
+if "GROK_API_KEY" not in os.environ or not os.environ["GROK_API_KEY"]:
+    raise RuntimeError(
+        "GROK_API_KEY is required but not found in environment variables. "
+        "Please set GROK_API_KEY in your .env file or environment."
     )
-else:
-    client = None
+
+api_key = os.environ["GROK_API_KEY"]
+client = OpenAI(
+    api_key=api_key,
+    base_url="https://api.x.ai/v1"
+)
 
 
 def generate_reply(user_input: str) -> dict:
-    if client is None:
-        return {
-            "text": "Grok API key not configured. Please set GROK_API_KEY environment variable.",
-            "video": None
-        }
     
     messages = [
         {"role": "system", "content": MAYA_SYSTEM_PROMPT},

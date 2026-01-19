@@ -23,6 +23,7 @@ from auth.deps import get_current_user_optional
 from auth.models import User, get_db
 from chat.router import router as chat_router
 from chat.models import init_db as init_chat_db, Chat, Message
+from voice.router import router as voice_router
 from sqlalchemy.orm import Session
 
 # Configure logging
@@ -33,10 +34,13 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=[
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+    ],
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization"],
 )
 
 # Initialize chat database
@@ -45,6 +49,7 @@ init_chat_db()
 # Include routers
 app.include_router(auth_router)
 app.include_router(chat_router)
+app.include_router(voice_router)  # Synchronous voice chat endpoint (POST /voice/chat)
 
 # Mount static files for serving generated images
 static_dir = Path(__file__).parent.parent / "static"
